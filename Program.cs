@@ -4,13 +4,11 @@ using Amazon.Extensions.NETCore.Setup;
 using Amazon.Runtime;
 using Amazon.SecretsManager;
 using IdentityAPI.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Net;
 using System.Text.Json;
 using Newtonsoft.Json;
+using Microsoft.IdentityModel.Tokens;
 
 namespace IdentityAPI
 {
@@ -67,7 +65,8 @@ namespace IdentityAPI
             });
             builder.Services.AddAWSService<IAmazonCognitoIdentityProvider>(options);
             builder.Services.AddSingleton<IIdentityService, CognitoIdentityService>();
-            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            builder.Services.AddAWSLambdaHosting(LambdaEventSource.HttpApi);
+            builder.Services.AddAuthentication("Bearer")
                 .AddJwtBearer(options =>
                 {
                     options.SaveToken = true;
